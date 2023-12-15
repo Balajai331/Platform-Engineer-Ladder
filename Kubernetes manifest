@@ -1,0 +1,94 @@
+# kubernetes manifest
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: Ladder deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: Ladder
+  template:
+    metadata:
+      labels:
+        app: Ladder
+    spec:
+      containers:
+       - name: Ladder
+         image: baladoc2023/ladder:latest 
+         resources:
+            limits:
+              memory: "500Mi"
+              cpu: "500m"
+          ports:
+            - containerPort: 3000
+          securityContext:
+            runAsUser: 1331
+
+
+# load balancer
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: Ladder
+spec:
+  selector:
+    app: Ladder
+  ports:
+   - protocol: TCP
+     port: 80
+     targetPort: 3000
+  type: LoadBalancer
+
+
+#autosacling
+
+apiVersion: autoscaling
+kind: HorizontalPodAutoscaler
+metadata:
+  name: Ladder
+spec:
+  scaleTargetRef:
+   apiVersion: apps/v1
+   kind: Deployment
+   name: Ladder deployment
+  minReplicas: 1 
+  maxReplicas: 3  
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        targetAverageUtilization: 65
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
