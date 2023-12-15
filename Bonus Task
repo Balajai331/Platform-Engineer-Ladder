@@ -1,0 +1,22 @@
+#!/bin/bash
+
+REMOTE_HOST="Ladder"
+REMOTE_USER="Bala"
+
+
+linux_check() {
+    ssh -o StrictHostKeyChecking=no -o BatchMode=yes "$REMOTE_USER@$REMOTE_HOST" 'command -v ls && command -v grep && command -v cat'
+}
+
+
+windows_check() {
+    ssh -o StrictHostKeyChecking=no -o BatchMode=yes "$REMOTE_USER@$REMOTE_HOST" 'if exist C:\Windows\System32\cmd.exe echo "Windows"'
+}
+
+
+if linux_check; then
+    echo "The remote server is running on Linux."
+elif windows_check; then
+    echo "The remote server is running on Windows."
+
+fi
