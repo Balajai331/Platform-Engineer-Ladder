@@ -1,5 +1,4 @@
 name:  Ladder CI/CD
-
 on:
   push:
     branches:
@@ -7,7 +6,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout repo
         uses: actions/checkout
