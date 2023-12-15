@@ -1,0 +1,33 @@
+name:  Ladder CI/CD
+
+on:
+  push:
+    branches:
+      - '*'
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout
+
+      - name: node.js setup
+        uses: actions/setup-node
+        with:
+          node-version: '16'
+
+      - name: NPM Installation
+        run: npm install
+
+      - name: Docker image bulid
+        run: |
+          echo "DEPLOYED_FROM=${GITHUB_REF#refs/heads/}" >> $GITHUB_ENV
+          docker build -t baladoc2023/ladder:latest .
+          docker push baladoc2023/ladder:latest
+
+      - name: Deployment to Docker Hub
+        if: github.ref != 'refs/heads/test'
+        run: |
+          docker pull baladoc2023/ladder:latest
+          docker run -p 3000:3000 baladoc2023/ladder:latest
